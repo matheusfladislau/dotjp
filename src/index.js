@@ -6,6 +6,7 @@ const { sequelizeInstance, testConnection } = require('../database');
 const { loadModels } = require('../database/load-models');
 const { setupAssociations } = require('../database/associations');
 const { seedHiragana } = require('../database/setup/seed-hiragana');
+const { startDailyTask } = require('../cron/daily');
 
 
 (async () => {
@@ -55,4 +56,6 @@ const { seedHiragana } = require('../database/setup/seed-hiragana');
 		console.error("[DATABASE] - Failed to connect or sync:", err);
 		process.exit(1);
 	}
+
+	startDailyTask(client);
 })();

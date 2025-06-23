@@ -1,0 +1,36 @@
+const cron = require('node-cron');
+const { Daily } = require('../database/models/Daily');
+const { Hiragana } = require('../database/models/Hiragana');
+const { channelId } = require('../config.json');
+
+function startDailyTask(client) {
+    cron.schedule('*/2 * * * *', async () => {
+        try {
+            const usedHiraganas = await Daily.findAll({ attributes: ['id_hiragana'] });
+            const usedIds = usedHiraganas.map(d => d.id_hiragana);
+
+            const available = await Hiragana.findAll({ where: { id: { [require('sequelize').Op.notIn]: usedIds } } });
+
+            if (available.length === 0) {
+                console.log("Todos os hiraganas foram usados. Reiniciando...");
+                await Daily.destroy({ where: {} });
+                return;
+            }
+
+            const random = available[Math.floor(Math.random() * available.length)];
+
+            await Daily.create({
+                id_hiragana: random.id,
+                date: new Date()
+            });
+
+            const channel = await client.channels.fetch(channelId);
+            await channel.send(`@949067885265960990 e @433736570269335552!\n Novo hiragana do dia!\n **${random.kana}** (${random.romaji})\nUse o comando \`/enterHiragana\` para enviar uma palavra com esse kana!`);
+        } catch (err) {
+            console.error("Erro ao gerar hiragana diário:", err);
+        }
+    });
+}
+
+
+module.exports = { startDailyTask };

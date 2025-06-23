@@ -140,3 +140,6 @@ config.json
 
 # Eslint
 eslint.config.js
+
+# Sqlite
+db.sqlite

@@ -2,22 +2,44 @@ const { Client, GatewayIntentBits } = require('discord.js');
 const { token } = require('../config.json');
 const { loadCommands } = require('../setup/load-commands');
 const { loadEvents } = require('../setup/load-events');
+const { sequelize, testConnection } = require('../database');
 
-const client = new Client({intents: [GatewayIntentBits.Guilds]})
-client.login(token);
+(async () => {
+	const client = new Client({ intents: [GatewayIntentBits.Guilds] })
+	client.login(token);
 
-console.log("[COMMANDS] - Loading commands.");
-client.commands = loadCommands(false);
-console.log("[COMMANDS] - Done.");
-
-
-console.log("[EVENTS] - Loading events.");
-const events = loadEvents();
-for (const event of events) {
-	if (event.once) {
-		client.once(event.name, (...args) => event.execute(...args));
-	} else {
-		client.on(event.name, (...args) => event.execute(...args));
+	try {
+		console.log("[COMMANDS] - Loading commands.");
+		client.commands = loadCommands(false);
+		console.log("[COMMANDS] - Done.");
+	} catch (err) {
+		console.error("[COMMANDS] - Failed:", err);
+		process.exit(1);
 	}
-}
-console.log("[EVENTS] - Done.");
+
+	try {
+		console.log("[EVENTS] - Loading events.");
+		const events = loadEvents();
+		for (const event of events) {
+			if (event.once) {
+				client.once(event.name, (...args) => event.execute(...args));
+			} else {
+				client.on(event.name, (...args) => event.execute(...args));
+			}
+		}
+		console.log("[EVENTS] - Done.");
+	} catch (err) {
+		console.error("[EVENTS] - Failed:", err);
+		process.exit(1);
+	}
+
+	try {
+		console.log("[DATABASE] - Connecting...");
+		await testConnection();
+		await sequelize.sync();
+		console.log("[DATABASE] - Done.");
+	} catch (err) {
+		console.error("[DATABASE] - Failed to connect or sync:", err);
+		process.exit(1);
+	}
+})();

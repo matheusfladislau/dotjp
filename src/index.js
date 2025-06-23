@@ -5,6 +5,7 @@ const { loadEvents } = require('../setup/load-events');
 const { sequelizeInstance, testConnection } = require('../database');
 const { loadModels } = require('../database/load-models');
 const { setupAssociations } = require('../database/associations');
+const { seedHiragana } = require('../database/setup/seed-hiragana');
 
 
 (async () => {
@@ -14,6 +15,7 @@ const { setupAssociations } = require('../database/associations');
 	try {
 		console.log("[COMMANDS] - Loading commands.");
 		client.commands = loadCommands(false);
+		console.log(client.commands);
 		console.log("[COMMANDS] - Done.");
 	} catch (err) {
 		console.error("[COMMANDS] - Failed:", err);
@@ -44,6 +46,10 @@ const { setupAssociations } = require('../database/associations');
 		setupAssociations();
 
 		await sequelizeInstance.sync({force: true});
+
+		seedHiragana();
+		console.log("[DATABASE] - Hiraganas inserted successfully.");
+
 		console.log("[DATABASE] - Done.");
 	} catch (err) {
 		console.error("[DATABASE] - Failed to connect or sync:", err);

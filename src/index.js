@@ -16,10 +16,9 @@ const { startDailyTask } = require('../cron/daily');
 	try {
 		console.log("[COMMANDS] - Loading commands.");
 		client.commands = loadCommands(false);
-		console.log(client.commands);
 		console.log("[COMMANDS] - Done.");
-	} catch (err) {
-		console.error("[COMMANDS] - Failed:", err);
+	} catch (error) {
+		console.error("[COMMANDS] - Failed:", error);
 		process.exit(1);
 	}
 
@@ -34,8 +33,8 @@ const { startDailyTask } = require('../cron/daily');
 			}
 		}
 		console.log("[EVENTS] - Done.");
-	} catch (err) {
-		console.error("[EVENTS] - Failed:", err);
+	} catch (error) {
+		console.error("[EVENTS] - Failed:", error);
 		process.exit(1);
 	}
 
@@ -52,8 +51,8 @@ const { startDailyTask } = require('../cron/daily');
 		console.log("[DATABASE] - Hiraganas inserted successfully.");
 
 		console.log("[DATABASE] - Done.");
-	} catch (err) {
-		console.error("[DATABASE] - Failed to connect or sync:", err);
+	} catch (error) {
+		console.error("[DATABASE] - Failed to connect or sync:", error);
 		process.exit(1);
 	}
 

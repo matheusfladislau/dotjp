@@ -9,7 +9,7 @@ module.exports = {
 		try {
 			const count = await Hiragana.count();
 			if (count === 0) {
-				return await interaction.reply(`⚠️ Nenhum hiragana foi encontrado no banco de dados, ${interaction.user.username}. :(`);
+				return await interaction.reply(`Nenhum hiragana foi encontrado no banco de dados, ${interaction.user.username}. :(`);
 			}
 
 			const randomIndex = Math.floor(Math.random() * count);
@@ -17,9 +17,9 @@ module.exports = {
 
 			await interaction.reply(`🔤 **Kana:** ${hiragana.kana}\n📝 **Romaji:** ${hiragana.romaji}`);
 		} catch (error) {
-			console.error('Erro ao buscar hiragana:', error);
+			console.error(error);
 			await interaction.reply({
-				content: '❌ Ocorreu um erro ao buscar um hiragana.',
+				content: 'Ocorreu um erro ao buscar um hiragana.',
 				ephemeral: true
 			});
 		}

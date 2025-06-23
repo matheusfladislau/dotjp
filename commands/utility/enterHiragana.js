@@ -31,15 +31,15 @@ module.exports = {
                 })
             }
 
-            const instDailyUser = await DailyUser.count({
+            const instDailyUser = await DailyUser.findOne({
                 where: {
                     id_daily: ultimoDaily.id,
                     id_user: instUser.id
                 }
             });
 
-            if (instDailyUser.count > 0) {
-                return await interaction.reply(`@${interaction.user.username}, você já colocou a palavra diária: ${instDailyUser.word}`);
+            if (instDailyUser != null) {
+                return await interaction.reply(`<@${interaction.user.id}>, você já colocou a palavra diária: **${instDailyUser.word}**`);
             }
 
             const palavra = interaction.options.getString('palavra');
@@ -49,8 +49,7 @@ module.exports = {
                 word: palavra
             });
 
-            return await interaction.reply(`Parabéns <@${interaction.user.username}>! 
-                A sua palavra: ${palavra} foi registrada. :)\nhttps://media.tenor.com/vgnTqjRM8xYAAAAM/ccs.gif`);
+            return await interaction.reply(`Parabéns <@${interaction.user.id}>!\nA sua palavra: **${palavra}** foi registrada. :)\nhttps://media.tenor.com/vgnTqjRM8xYAAAAM/ccs.gif`);
 		} catch (error) {
 			console.error(error);
 			await interaction.reply({

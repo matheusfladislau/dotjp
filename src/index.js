@@ -2,7 +2,10 @@ const { Client, GatewayIntentBits } = require('discord.js');
 const { token } = require('../config.json');
 const { loadCommands } = require('../setup/load-commands');
 const { loadEvents } = require('../setup/load-events');
-const { sequelize, testConnection } = require('../database');
+const { sequelizeInstance, testConnection } = require('../database');
+const { loadModels } = require('../database/load-models');
+const { setupAssociations } = require('../database/associations');
+
 
 (async () => {
 	const client = new Client({ intents: [GatewayIntentBits.Guilds] })
@@ -36,7 +39,11 @@ const { sequelize, testConnection } = require('../database');
 	try {
 		console.log("[DATABASE] - Connecting...");
 		await testConnection();
-		await sequelize.sync();
+
+		loadModels();
+		setupAssociations();
+
+		await sequelizeInstance.sync({force: true});
 		console.log("[DATABASE] - Done.");
 	} catch (err) {
 		console.error("[DATABASE] - Failed to connect or sync:", err);

@@ -1,22 +1,22 @@
 const { sequelizeInstance } = require('../index');
 const { Sequelize } = require('sequelize');
 
-const Hiragana = sequelizeInstance.define('Hiragana', {
+const Daily = sequelizeInstance.define('Daily', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
     },
-    kana: {
-        type: Sequelize.STRING,
+    date: {
+        type: Sequelize.DATE,
         allowNull: false,
     },
-    romaji: {
-        type: Sequelize.STRING,
+    id_hiragana: {
+        type: Sequelize.INTEGER,
         allowNull: false,
-    },
+    }
 }, {
-    tableName: 'Hiragana',
+    tableName: 'Daily',
     timestamps: false
 });
 
-module.exports = { Hiragana };
+module.exports = { Daily }

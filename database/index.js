@@ -1,13 +1,13 @@
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize({
+const sequelizeInstance = new Sequelize({
 	dialect: 'sqlite',
     storage: 'db.sqlite',
     logging: false,
 });
 
 async function testConnection() {
-	await sequelize.authenticate();
+	await sequelizeInstance.authenticate();
 }
 
-module.exports = { sequelize, testConnection };
+module.exports = { sequelizeInstance, testConnection };

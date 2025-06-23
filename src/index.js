@@ -1,5 +1,5 @@
 const { Client, GatewayIntentBits } = require('discord.js');
-const { token } = require('../config.json');
+const { token, guildId } = require('../config.json');
 const { loadCommands } = require('../setup/load-commands');
 const { loadEvents } = require('../setup/load-events');
 const { sequelizeInstance, testConnection } = require('../database');
@@ -8,6 +8,7 @@ const { setupAssociations } = require('../database/associations');
 const { seedHiragana } = require('../database/setup/seed-hiragana');
 const { startDailyTask } = require('../cron/daily');
 
+console.log('STARTING TOMOYO.JP...');
 
 (async () => {
 	const client = new Client({ intents: [GatewayIntentBits.Guilds] })
@@ -45,7 +46,8 @@ const { startDailyTask } = require('../cron/daily');
 		loadModels();
 		setupAssociations();
 
-		await sequelizeInstance.sync({force: true});
+		//await sequelizeInstance.sync({force: true});
+		await sequelizeInstance.sync();
 
 		seedHiragana();
 		console.log("[DATABASE] - Hiraganas inserted successfully.");
